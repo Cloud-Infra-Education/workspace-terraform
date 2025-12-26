@@ -1,9 +1,6 @@
 resource "aws_eks_access_entry" "terraform_admin" {
   cluster_name = module.eks.cluster_name
-
-  principal_arn = "arn:aws:iam::404457776061:user/Saerochan_Song"
-
-
+  principal_arn = var.eks_admin_principal_arn
   type = "STANDARD"
 }
 

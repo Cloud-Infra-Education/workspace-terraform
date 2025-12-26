@@ -21,3 +21,7 @@ variable "eks_public_access_cidrs" {
   type        = list(string)
 }
 
+variable "eks_admin_principal_arn" {
+  description = "EKS access entry 생성용"
+  type        = string
+}
