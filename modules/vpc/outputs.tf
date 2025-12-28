@@ -13,5 +13,6 @@ output "private_eks_subnet_ids" {
     if startswith(try(s.tags["Name"], ""), "PrivateSubnet-EKS-")
   ]
 }
-
-
+#--------------------------------------
+#DB Subnet 구성할 때 똑같이 하시오.....
+#--------------------------------------

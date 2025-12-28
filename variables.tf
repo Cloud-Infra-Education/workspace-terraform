@@ -35,3 +35,44 @@ variable "ecr_replication_repo_prefixes" {
     "product-service",
   ]
 }
+
+# =======================
+# ADDED: ArgoCD install & Application settings (Seoul + Oregon)
+# =======================
+variable "argocd_namespace" {
+  type        = string
+  default     = "argocd"
+}
+
+variable "argocd_chart_version" {
+  type        = string
+  default     = ""
+}
+
+variable "argocd_app_name" {
+  description = "ArgoCD Application name"
+  type        = string
+  default     = "manifest-management-test"
+}
+
+variable "argocd_app_repo_url" { ############ 나중에 수정
+  description = "깃허브 Manifest 레포 URL"
+  type        = string
+  default     = "https://github.com/MaxJagger/formation-lap-eve-manifests.git"
+}
+
+variable "argocd_app_path" {
+  type        = string
+  default     = "base"
+}
+
+variable "argocd_app_target_revision" {
+  type        = string
+  default     = "main"
+}
+
+#ArgoCD 애플리케이션이 배포 될 ns
+variable "argocd_app_destination_namespace" { 
+  type        = string
+  default     = "formation-lap"
+}

@@ -16,10 +16,16 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 2.12"
     }
-
+  
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.0"
+    }
+  
   }
 
 }
+
 
 #default provider 참조하는 경우
 provider "aws" {
