@@ -10,7 +10,7 @@ module "eks_seoul" {
   cluster_version = "1.34"
 
   vpc_id     = module.kor_vpc.vpc_id
-  subnet_ids = module.kor_vpc.private_subnet_ids
+  subnet_ids = module.kor_vpc.private_eks_subnet_ids
 
   cluster_endpoint_private_access      = true
   cluster_endpoint_public_access       = true
@@ -40,7 +40,7 @@ module "eks_oregon" {
   cluster_version = "1.34"
 
   vpc_id     = module.usa_vpc.vpc_id
-  subnet_ids = module.usa_vpc.private_subnet_ids
+  subnet_ids = module.usa_vpc.private_eks_subnet_ids
 
   cluster_endpoint_private_access      = true
   cluster_endpoint_public_access       = true

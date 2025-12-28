@@ -7,4 +7,11 @@ output "vpc_id" {
 output "private_subnet_ids" {
   value = aws_subnet.private[*].id
 }
+output "private_eks_subnet_ids" {
+  value = [
+    for s in aws_subnet.private : s.id
+    if startswith(try(s.tags["Name"], ""), "PrivateSubnet-EKS-")
+  ]
+}
+
 
