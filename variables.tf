@@ -76,3 +76,22 @@ variable "argocd_app_destination_namespace" {
   type        = string
   default     = "formation-lap"
 }
+
+# =======================
+# ADDED: EKS Cluster Autoscaler & IAM Settings
+# =======================
+variable "account_id" {
+  description = "AWS Account ID for ARN construction"
+  type        = string
+}
+
+variable "oidc_url" {
+  description = "EKS Cluster OIDC Issuer URL (without https://)"
+  type        = string
+}
+
+variable "cluster_name" {
+  description = "EKS Cluster Name"
+  type        = string
+  default     = "formation-seoul-cluster"
+}
