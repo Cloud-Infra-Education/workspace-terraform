@@ -52,7 +52,7 @@ variable "argocd_chart_version" {
 variable "argocd_app_name" {
   description = "ArgoCD Application name"
   type        = string
-  default     = "manifest-management-test"
+  default     = "sumin13-manifest-management" # sumin13 추가
 }
 
 variable "argocd_app_repo_url" { ############ 나중에 수정
@@ -81,17 +81,12 @@ variable "argocd_app_destination_namespace" {
 # ADDED: EKS Cluster Autoscaler & IAM Settings
 # =======================
 variable "account_id" {
-  description = "AWS Account ID for ARN construction"
-  type        = string
-}
-
-variable "oidc_url" {
-  description = "EKS Cluster OIDC Issuer URL (without https://)"
+  description = "AWS 계정 ID (12자리)"
   type        = string
 }
 
 variable "cluster_name" {
-  description = "EKS Cluster Name"
+  description = "EKS 클러스터 이름"
   type        = string
-  default     = "formation-seoul-cluster"
+  default     = "sumin13-formation-lap-seoul" # sumin13 추가
 }

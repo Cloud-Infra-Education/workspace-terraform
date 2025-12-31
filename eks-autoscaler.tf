@@ -1,69 +1,102 @@
-# 1. 관리형 노드 그룹 (eksctl 1번 대응: 2~5대 설정)
-resource "aws_eks_node_group" "standard_nodes" {
-  cluster_name    = var.cluster_name
-  node_group_name = "standard-nodes"
-  node_role_arn   = "arn:aws:iam::${var.account_id}:role/eks-node-role" # 기존 역할 참조
-  subnet_ids      = module.vpc.private_subnets
+# ==========================================
+# 1. 서울 리전용 Cluster Autoscaler (ap-northeast-2)
+# ==========================================
 
-  scaling_config {
-    desired_size = 2
-    min_size     = 2
-    max_size     = 5
+# 서울 IRSA (IAM Role)
+module "cluster_autoscaler_irsa_seoul" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~> 5.0"
+
+  role_name = "sumin13-autoscaler-irsa-seoul"
+
+  attach_cluster_autoscaler_policy = true
+  cluster_autoscaler_cluster_names = [module.eks_seoul.cluster_name]
+
+  oidc_providers = {
+    eks = {
+      provider_arn               = module.eks_seoul.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:cluster-autoscaler"]
+    }
   }
-
-  instance_types = ["t3.medium"]
 }
 
-# 2. Cluster Autoscaler용 IRSA (eksctl 2번 대응)
-resource "aws_iam_role" "cluster_autoscaler_role" {
-  name = "cluster-autoscaler-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRoleWithWebIdentity"
-      Effect = "Allow"
-      Principal = {
-        Federated = "arn:aws:iam::${var.account_id}:oidc-provider/${var.oidc_url}"
-      }
-      Condition = {
-        StringEquals = {
-          "${var.oidc_url}:sub": "system:serviceaccount:kube-system:cluster-autoscaler"
-        }
-      }
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "autoscaler_policy_attach" {
-  role       = aws_iam_role.cluster_autoscaler_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
-}
-
-# 3. Helm 배포 (eksctl 3번 대응 및 최적화 옵션 포함)
-resource "helm_release" "cluster_autoscaler" {
+# 서울 Helm Release
+resource "helm_release" "cluster_autoscaler_seoul" {
   name       = "cluster-autoscaler"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
   namespace  = "kube-system"
+  version    = "9.37.0"
 
   set {
     name  = "autoDiscovery.clusterName"
-    value = var.cluster_name
+    value = module.eks_seoul.cluster_name
   }
-
+  set {
+    name  = "awsRegion"
+    value = "ap-northeast-2"
+  }
+  set {
+    name  = "rbac.serviceAccount.name"
+    value = "cluster-autoscaler"
+  }
   set {
     name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.cluster_autoscaler_role.arn
+    value = module.cluster_autoscaler_irsa_seoul.iam_role_arn
   }
 
-  # 최적화 옵션 (patch 명령어 내용 반영)
+  # 클러스터 생성이 완료된 후 설치
+  depends_on = [module.eks_seoul]
+}
+
+# ==========================================
+# 2. 미국 오레곤 리전용 Cluster Autoscaler (us-west-2)
+# ==========================================
+
+# 미국 IRSA (IAM Role)
+module "cluster_autoscaler_irsa_oregon" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~> 5.0"
+
+  role_name = "sumin13-autoscaler-irsa-oregon"
+
+  attach_cluster_autoscaler_policy = true
+  cluster_autoscaler_cluster_names = [module.eks_oregon.cluster_name]
+
+  oidc_providers = {
+    eks = {
+      provider_arn               = module.eks_oregon.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:cluster-autoscaler"]
+    }
+  }
+}
+
+# 미국 Helm Release
+resource "helm_release" "cluster_autoscaler_oregon" {
+  provider   = helm.oregon
+  name       = "cluster-autoscaler"
+  repository = "https://kubernetes.github.io/autoscaler"
+  chart      = "cluster-autoscaler"
+  namespace  = "kube-system"
+  version    = "9.37.0"
+
   set {
-    name  = "extraArgs.balance-similar-node-groups"
-    value = "true"
+    name  = "autoDiscovery.clusterName"
+    value = module.eks_oregon.cluster_name
   }
   set {
-    name  = "extraArgs.skip-nodes-with-system-pods"
-    value = "false"
+    name  = "awsRegion"
+    value = "us-west-2"
   }
+  set {
+    name  = "rbac.serviceAccount.name"
+    value = "cluster-autoscaler"
+  }
+  set {
+    name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = module.cluster_autoscaler_irsa_oregon.iam_role_arn
+  }
+
+  # 클러스터 생성이 완료된 후 설치
+  depends_on = [module.eks_oregon]
 }
