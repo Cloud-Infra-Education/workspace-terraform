@@ -11,4 +11,4 @@ assignees: ''
   - 
 
 
- ⊰✿ 실행하는 데 전혀 문제가 없을까요? yes or no ✿ܓ
+ ⊰✿ apply / destroy도 잘되는지 확인까지 해주세요 😊 ✿ܓ
