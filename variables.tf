@@ -15,3 +15,16 @@ variable "admin_cidr" {
 variable "bastion_instance_type" {
   default = "t3.micro"
 }
+
+#온프레미스 환경 정보 추가
+variable "onprem_public_ip" {
+  type        = string
+}
+
+variable "onprem_private_cidr" {
+  default     = "192.168.1.0/24"
+}
+
+variable "account_id" {}
+variable "eks_public_access_cidrs" { type = list(string) }
+

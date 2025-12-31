@@ -3,3 +3,4 @@ resource "aws_route" "to_tgw" {
   destination_cidr_block = var.peer_vpc_cidr
   transit_gateway_id     = var.tgw_id
 }
+
