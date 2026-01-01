@@ -1,5 +1,5 @@
 module "kor_vpc" {
-  source    = "./modules/vpc"
+  source    = "../vpc"
   providers = { aws = aws.seoul }
 
   name = "KOR-Primary-VPC"
@@ -15,6 +15,7 @@ module "kor_vpc" {
     "10.0.21.0/24",
     "10.0.22.0/24"
   ]
+
   private_subnet_names = [
     "PrivateSubnet-EKS-A",
     "PrivateSubnet-EKS-B",
@@ -32,7 +33,7 @@ module "kor_vpc" {
 }
 
 module "usa_vpc" {
-  source    = "./modules/vpc"
+  source    = "../vpc"
   providers = { aws = aws.oregon }
 
   name = "USA-Primary-VPC"
@@ -41,13 +42,14 @@ module "usa_vpc" {
 
   public_subnets      = ["10.1.1.0/24", "10.1.2.0/24"]
   public_subnet_names = ["PublicSubnet-A", "PublicSubnet-B"]
-
+  
   private_subnets = [
     "10.1.11.0/24",
     "10.1.12.0/24",
     "10.1.21.0/24",
     "10.1.22.0/24"
   ]
+
   private_subnet_names = [
     "PrivateSubnet-EKS-A",
     "PrivateSubnet-EKS-B",
