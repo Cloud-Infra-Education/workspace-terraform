@@ -7,7 +7,6 @@ variable "argocd_chart_version" {
 }
 
 #--------애플리케이션 파트--------
-/*
 variable "argocd_app_name" {
   type = string
 }
@@ -27,4 +26,7 @@ variable "argocd_app_target_revision" {
 variable "argocd_app_destination_namespace" {
   type = string
 }
-*/
+variable "argocd_app_enabled" {
+  type = bool
+  default = false
+}

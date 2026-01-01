@@ -71,8 +71,14 @@ variable "argocd_app_target_revision" {
   default     = "main"
 }
 
-#ArgoCD 애플리케이션이 배포 될 ns
 variable "argocd_app_destination_namespace" { 
   type        = string
   default     = "formation-lap"
 }
+
+variable "argocd_app_enabled" {
+  description = "EKS에 ArgoCD 설치까지 마치고 앱을 만들기로..."
+  type        = bool
+  default     = false
+}
+
