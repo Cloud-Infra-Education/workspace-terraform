@@ -2,6 +2,8 @@
 set -euo pipefail
 
 # 1) ArgoCD
+terraform destroy -target=module.argocd.kubernetes_manifest.argocd_app_seoul[0] -auto-approve
+terraform destroy -target=module.argocd.kubernetes_manifest.argocd_app_oregon[0] -auto-approve
 terraform destroy -target=module.argocd.helm_release.argocd_seoul -auto-approve
 terraform destroy -target=module.argocd.helm_release.argocd_oregon -auto-approve
 
