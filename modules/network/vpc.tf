@@ -50,6 +50,7 @@ module "usa_vpc" {
     "10.1.22.0/24"
   ]
 
+
   private_subnet_names = [
     "PrivateSubnet-EKS-A",
     "PrivateSubnet-EKS-B",
