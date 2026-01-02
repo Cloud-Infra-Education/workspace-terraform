@@ -26,8 +26,10 @@ variable "eks_admin_principal_arn" {
   type        = string
 }
 
+# ==========
+# ECR 미러링
+# ==========
 variable "ecr_replication_repo_prefixes" {
-  description = "ECR 미러링 관련 옵션"
   type        = list(string)
   default = [
     "user-service",
@@ -36,6 +38,16 @@ variable "ecr_replication_repo_prefixes" {
   ]
 }
 
+# ===========================
+# S3 버킷 이름(전세계 고유값)
+# ===========================
+variable "origin_bucket_name" {
+  type = string
+}
+
+# =============
+# VPN 설정 변수
+# =============
 variable "onprem_public_ip" {
   type = string
 }
@@ -115,9 +127,8 @@ variable "domain_name" {
   type        = string
 }
 
-variable "api_subdomain" {
-  type        = string
-  default     = "api"
-}
-
+#variable "api_subdomain" {
+#  type        = string
+#  default     = "api"
+#}
 

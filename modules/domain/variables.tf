@@ -15,14 +15,15 @@ variable "ip_address_type" {
 }
 
 variable "tags" {
-  description = "Tags to apply to GA resources."
-  type        = map(string)
-  default     = {}
+  type = map(string)
+  default = {
+    RecordA : "api"
+  }
 }
 
-# ========================
-# ALB 태그를 가지고 지정함
-# ========================
+# ==========================
+# 태그를 가지고 ALB를 지정함
+# ==========================
 variable "alb_lookup_tag_key" {
   type        = string
   default     = "ingress.k8s.aws/stack"
@@ -142,3 +143,38 @@ variable "api_subdomain" {
   type = string
   default = "api"
 }
+
+variable "www_subdomain" {
+  type = string
+  default = "www"
+}
+# ===============
+# CloudFront 관련 
+# ===============
+
+#variable "origin_domain_name" {
+#  type        = string
+#}
+
+#버킷명 
+variable "origin_bucket_name" {
+  type        = string
+}
+
+variable "origin_bucket_region" {
+  type        = string
+  default     = "ap-northeast-2"
+}
+
+#variable "origin_protocol_policy" {
+#  description = "Origin protocol policy: http-only | https-only | match-viewer"
+#  type        = string
+#  default     = "http-only"
+#}
+
+variable "default_root_object" {
+  type        = string
+  default     = "index.html"
+}
+
+

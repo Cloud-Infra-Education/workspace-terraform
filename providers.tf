@@ -37,7 +37,11 @@ provider "aws" {
   region = "us-west-2"
   alias  = "oregon"
 }
-
+# ACM API 요청 Region
+provider "aws" {
+  region = "us-east-1"
+  alias  = "acm"
+}
 # ====================
 # Kubernetes providers
 # ====================

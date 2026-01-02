@@ -85,12 +85,19 @@ module "argocd" {
   argocd_app_enabled               = var.argocd_app_enabled
 }
 
+module "s3" {
+  source = "./modules/s3"
+
+  origin_bucket_name = var.origin_bucket_name
+}
+
 module "domain" {
   count = var.ga_enabled ? 1 : 0
   source = "./modules/domain"
 
   providers = {
     aws        = aws.oregon
+    aws.acm    = aws.acm
     aws.seoul  = aws.seoul
     aws.oregon = aws.oregon
   }
@@ -98,5 +105,6 @@ module "domain" {
   ga_name              = var.ga_name
   alb_lookup_tag_value = var.alb_lookup_tag_value
   domain_name          = var.domain_name
+  origin_bucket_name   = module.s3.origin_bucket_name
 }
 
