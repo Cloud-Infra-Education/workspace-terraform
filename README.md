@@ -1,4 +1,5 @@
 **scripts/terraform-apply.sh 설명**
+
 1번 코드는 기본인프라 구성부터 ArgoCD EKS 설치까지 진행됩니다. 
   - 만약 1번코드 오류가 뜬다면 아마 EKS 구성전에 ArgoCD 설치가 트리거됐기때문에 1번 코드 재실행하면 해결됩니다. (대부분)
 
@@ -13,6 +14,7 @@
 ========================================
 
 **scripts/terraform-destroy.sh 설명**
+
 만약 terraform-apply.sh 에 있는 모든 실행코드를 apply 했다면 이 쉘파일 단일실행만으로 모든 인프라가 지워집니다.
 
 if-1) terraform-apply.sh 의 3번 코드(도메인 구성) 실행을 안했다면 #GA 파트는 생략해주세요
