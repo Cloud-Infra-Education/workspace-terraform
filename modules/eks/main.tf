@@ -1,16 +1,4 @@
-terraform {
-  required_providers {
-    aws = {
-      source                = "hashicorp/aws"
-      configuration_aliases = [ aws.seoul, aws.oregon ]
-    }
-    helm = {
-      source                = "hashicorp/helm"
-      configuration_aliases = [ helm.oregon ]
-    }
-  }
-}
-
+# ================= Seoul Region ==================
 module "eks_seoul" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
@@ -30,7 +18,7 @@ module "eks_seoul" {
   cluster_endpoint_public_access_cidrs = var.eks_public_access_cidrs
 
   eks_managed_node_groups = {
-    sumin13-workers = {
+    standard-worker = {
       instance_types = ["t3.small"]
       desired_size   = 2
       min_size       = 2
@@ -38,7 +26,7 @@ module "eks_seoul" {
 
       tags = {
         "k8s.io/cluster-autoscaler/enabled"                   = "true"
-        "k8s.io/cluster-autoscaler/sumin13-formation-lap-seoul" = "owned"
+        "k8s.io/cluster-autoscaler/formation-lap-seoul" = "owned"
       }
     }
   }
@@ -48,7 +36,7 @@ module "cluster_autoscaler_irsa_seoul" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name = "sumin13-autoscaler-irsa-seoul"
+  role_name = "eks-autoscaler-irsa-seoul"
   attach_cluster_autoscaler_policy = true
   cluster_autoscaler_cluster_names = [module.eks_seoul.cluster_name]
 
@@ -61,7 +49,7 @@ module "cluster_autoscaler_irsa_seoul" {
 }
 
 resource "helm_release" "cluster_autoscaler_seoul" {
-  name       = "cluster-autoscaler"
+  name       = "eks-autoscaler-seoul"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
   namespace  = "kube-system"
@@ -87,6 +75,7 @@ resource "helm_release" "cluster_autoscaler_seoul" {
   depends_on = [module.eks_seoul]
 }
 
+# ================= Oregon Region ==================
 module "eks_oregon" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
@@ -106,15 +95,15 @@ module "eks_oregon" {
   cluster_endpoint_public_access_cidrs = var.eks_public_access_cidrs
 
   eks_managed_node_groups = {
-    sumin13-workers = {
+    standard-worker = {
       instance_types = ["t3.small"]
       desired_size   = 2
       min_size       = 2
       max_size       = 5
 
       tags = {
-        "k8s.io/cluster-autoscaler/enabled"                    = "true"
-        "k8s.io/cluster-autoscaler/sumin13-formation-lap-oregon" = "owned"
+        "k8s.io/cluster-autoscaler/enabled"              = "true"
+        "k8s.io/cluster-autoscaler/formation-lap-oregon" = "owned"
       }
     }
   }
@@ -124,7 +113,7 @@ module "cluster_autoscaler_irsa_oregon" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
 
-  role_name = "sumin13-autoscaler-irsa-oregon"
+  role_name = "eks-autoscaler-irsa-oregon"
   attach_cluster_autoscaler_policy = true
   cluster_autoscaler_cluster_names = [module.eks_oregon.cluster_name]
 
@@ -138,7 +127,7 @@ module "cluster_autoscaler_irsa_oregon" {
 
 resource "helm_release" "cluster_autoscaler_oregon" {
   provider   = helm.oregon
-  name       = "cluster-autoscaler"
+  name       = "eks-autoscaler-oregon"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
   namespace  = "kube-system"

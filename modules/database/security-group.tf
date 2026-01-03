@@ -1,7 +1,7 @@
 resource "aws_security_group" "db_kor" {
   provider = aws.seoul
 
-  name        = "sg-db-cluster-seoul"
+  name        = "Security-Group-DB-Cluster-Seoul"
   description = "KOR Aurora MySQL access"
   vpc_id      = var.kor_vpc_id
 
@@ -28,7 +28,7 @@ resource "aws_security_group_rule" "kor_eks_to_db" {
 resource "aws_security_group" "db_usa" {
   provider = aws.oregon
 
-  name        = "sg-db-cluster-oregon"
+  name        = "Security-Group-DB-Cluster-Oregon"
   description = "USA Aurora MySQL access"
   vpc_id      = var.usa_vpc_id
 
